@@ -103,21 +103,21 @@
   <meta name="keywords" content="Hexo, NexT" />
 
 
-<meta name="description" content="微信小程序生命周期官网给出的生命周期和状态图   由上图可知，小程序由两大线程组成：负责界面的视图线程（view thread）和负责数据、服务处理的服务线程（appservice thread），两者协同工作，完成小程序页面生命周期的调用。 视图线程有四大状态： 初始化状态：初始化视图线程所需要的工作，初始化完成后向 “服务线程”发送初始化完成信号，然后进入等待状态，等待服务线程提供初始化数据。">
+<meta name="description" content="微信小程序生命周期我们组的项目是用微信小程序编写一个中大活动。目的是开发一款浏览活动，在线活动报名，在线活动组队，在线活动讨论和分享平台。这就需要没有小程序编写经验，只有一点Vue经历的我开始学习小程序的编写。与此同时，第一次迭代我还是一名产品经理，进行基础功能的定义和期望UI的设计。其中我想总结的是小程序的生命周期学习总结。我对于这一部分是极其陌生的，理解小程序的生命周期极为重要。官网给出的生命">
 <meta property="og:type" content="article">
-<meta property="og:title" content="系统分析与设计作业_3">
+<meta property="og:title" content="系统分析与设计作业_3-学习总结">
 <meta property="og:url" content="https://taowy.github.io/2018/04/10/hw3/index.html">
 <meta property="og:site_name" content="Ditto.">
-<meta property="og:description" content="微信小程序生命周期官网给出的生命周期和状态图   由上图可知，小程序由两大线程组成：负责界面的视图线程（view thread）和负责数据、服务处理的服务线程（appservice thread），两者协同工作，完成小程序页面生命周期的调用。 视图线程有四大状态： 初始化状态：初始化视图线程所需要的工作，初始化完成后向 “服务线程”发送初始化完成信号，然后进入等待状态，等待服务线程提供初始化数据。">
+<meta property="og:description" content="微信小程序生命周期我们组的项目是用微信小程序编写一个中大活动。目的是开发一款浏览活动，在线活动报名，在线活动组队，在线活动讨论和分享平台。这就需要没有小程序编写经验，只有一点Vue经历的我开始学习小程序的编写。与此同时，第一次迭代我还是一名产品经理，进行基础功能的定义和期望UI的设计。其中我想总结的是小程序的生命周期学习总结。我对于这一部分是极其陌生的，理解小程序的生命周期极为重要。官网给出的生命">
 <meta property="og:locale" content="zh-hans">
 <meta property="og:image" content="https://taowy.github.io/images/20160924153018563.png">
 <meta property="og:image" content="https://taowy.github.io/images/20160924153316501.png">
 <meta property="og:image" content="https://taowy.github.io/images/3133209-53f51875490c7b35.png">
 <meta property="og:image" content="https://taowy.github.io/images/891fb12b-6380-3b15-83af-bf398fa1d8d4.jpg">
-<meta property="og:updated_time" content="2018-04-15T02:27:16.899Z">
+<meta property="og:updated_time" content="2018-04-15T14:46:57.909Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="系统分析与设计作业_3">
-<meta name="twitter:description" content="微信小程序生命周期官网给出的生命周期和状态图   由上图可知，小程序由两大线程组成：负责界面的视图线程（view thread）和负责数据、服务处理的服务线程（appservice thread），两者协同工作，完成小程序页面生命周期的调用。 视图线程有四大状态： 初始化状态：初始化视图线程所需要的工作，初始化完成后向 “服务线程”发送初始化完成信号，然后进入等待状态，等待服务线程提供初始化数据。">
+<meta name="twitter:title" content="系统分析与设计作业_3-学习总结">
+<meta name="twitter:description" content="微信小程序生命周期我们组的项目是用微信小程序编写一个中大活动。目的是开发一款浏览活动，在线活动报名，在线活动组队，在线活动讨论和分享平台。这就需要没有小程序编写经验，只有一点Vue经历的我开始学习小程序的编写。与此同时，第一次迭代我还是一名产品经理，进行基础功能的定义和期望UI的设计。其中我想总结的是小程序的生命周期学习总结。我对于这一部分是极其陌生的，理解小程序的生命周期极为重要。官网给出的生命">
 <meta name="twitter:image" content="https://taowy.github.io/images/20160924153018563.png">
 
 
@@ -134,7 +134,7 @@
     sidebar: "",
   };
 </script>
-  <title>系统分析与设计作业_3 | Ditto.</title>
+  <title>系统分析与设计作业_3-学习总结 | Ditto.</title>
   
 
 
@@ -292,7 +292,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">系统分析与设计作业_3</h1>
+          <h1 class="post-title" itemprop="name headline">系统分析与设计作业_3-学习总结</h1>
         
 
         <div class="post-meta">
@@ -359,7 +359,7 @@
       
 
       
-        <h2 id="微信小程序生命周期"><a href="#微信小程序生命周期" class="headerlink" title="微信小程序生命周期"></a>微信小程序生命周期</h2><p><strong>官网给出的生命周期和状态图</strong></p>
+        <h2 id="微信小程序生命周期"><a href="#微信小程序生命周期" class="headerlink" title="微信小程序生命周期"></a>微信小程序生命周期</h2><p>我们组的项目是用微信小程序编写一个中大活动。目的是开发一款浏览活动，在线活动报名，在线活动组队，在线活动讨论和分享平台。这就需要没有小程序编写经验，只有一点Vue经历的我开始学习小程序的编写。与此同时，第一次迭代我还是一名产品经理，进行基础功能的定义和期望UI的设计。<br>其中我想总结的是小程序的生命周期学习总结。我对于这一部分是极其陌生的，理解小程序的生命周期极为重要。<br><strong>官网给出的生命周期和状态图</strong></p>
 <p><img src="/images/20160924153018563.png" alt="20160924153018563"></p>
 <p><img src="/images/20160924153316501.png" alt="20160924153316501"></p>
 <p>由上图可知，小程序由两大线程组成：负责界面的视图线程（view thread）和负责数据、服务处理的服务线程（appservice thread），两者协同工作，完成小程序页面生命周期的调用。</p>
@@ -377,6 +377,8 @@
 <p>如果跳转执行的是的redirectTo方法时，主页面会执行onUnload方法（卸载），新页面会相继执行onLoad、onShow、onReady。这时候不能返回到主页面，因为redirectTo方法是将新页面覆盖原页面，而原页面已被卸载。</p>
 <p>这就是小程序页面的生命周期。</p>
 <p><strong>应用的生命周期对页面生命周期的影响</strong><br><img src="/images/3133209-53f51875490c7b35.png" alt="3133209-53f51875490c7b35"></p>
+<hr>
+<p><strong>UML学习过程中总结的基本内容</strong></p>
 <h2 id="UML用例图"><a href="#UML用例图" class="headerlink" title="UML用例图"></a>UML用例图</h2><p>用例图的4个基本组件：<code>参与者(Actor)</code>、<code>用例(Use Case)</code>、<code>关系(Relationship)</code>和<code>系统(system)</code>。 </p>
 <h4 id="泛化-generalization-："><a href="#泛化-generalization-：" class="headerlink" title="泛化(generalization)："></a>泛化(generalization)：</h4><p>泛化关系是一种继承关系，子用例将继承基用例的所有行为，关系和通信关系，也就是说在任何使用基用例的地方都可以用子用例来代替。泛化关系在用例图中使用空心的箭头表示，箭头方向从子用例指向基用例。</p>
 <h4 id="扩展-extend-："><a href="#扩展-extend-：" class="headerlink" title="扩展(extend)："></a>扩展(extend)：</h4><p>extend关系是对基用例的扩展，基用例是一个完整的用例，即使没有子用例的参与，也可以完成一个完整的功能。extend的基用例中将存在一个扩展点，只有当扩展点被激活时，子用例才会被执行。 extend关系在用例图中使用带箭头的虚线表示(在线上标注&lt;<extend>&gt;)，箭头从子用例指向基用例。</extend></p>
