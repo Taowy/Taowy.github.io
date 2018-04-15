@@ -355,7 +355,25 @@
       
         
           
-            <h2 id="UML用例图"><a href="#UML用例图" class="headerlink" title="UML用例图"></a>UML用例图</h2><p>用例图的4个基本组件：<code>参与者(Actor)</code>、<code>用例(Use Case)</code>、<code>关系(Relationship)</code>和<code>系统(system)</code>。 </p>
+            <h2 id="微信小程序生命周期"><a href="#微信小程序生命周期" class="headerlink" title="微信小程序生命周期"></a>微信小程序生命周期</h2><p><strong>官网给出的生命周期和状态图</strong></p>
+<p><img src="/images/20160924153018563.png" alt="20160924153018563"></p>
+<p><img src="/images/20160924153316501.png" alt="20160924153316501"></p>
+<p>由上图可知，小程序由两大线程组成：负责界面的视图线程（view thread）和负责数据、服务处理的服务线程（appservice thread），两者协同工作，完成小程序页面生命周期的调用。</p>
+<p>视图线程有四大状态：</p>
+<p>初始化状态：初始化视图线程所需要的工作，初始化完成后向 “服务线程”发送初始化完成信号，然后进入等待状态，等待服务线程提供初始化数据。<br>首次渲染状态：当收到服务线程提供的初始化数据后（json和js中的data数据），渲染小程序界面，渲染完毕后，发送“首次渲染完成信号”给服务线程，并将页面展示给用户。<br>持续渲染状态：此时界面线程继续一直等待“服务线程”通过this.setdata（）函数发送来的界面数据，只要收到就重新局部渲染，也因此只要更新数据并发送信号，界面就自动更新。<br>结束状态：页面被回收或者销毁、应用被系统回收、销毁时触发。<br>服务线程五大状态：</p>
+<p>初始化状态：此阶段仅启动服务线程所需的基本功能，比如信号发送模块。系统的初始化工作完毕，就调用自定义的onload和onshow，然后等待视图线程的“视图线程初始化完成”号。onload是只会首次渲染的时候执行一次，onshow是每次界面切换都会执行，简单理解，这就是唯一差别。<br>等待激活状态：接收到“视图线程初始化完成”信号后，将初始化数据发送给“视图线程”，等待视图线程完成初次渲染。<br>激活状态：收到视图线程发送来的“首次渲染完成”信号后，就进入激活状态既程序的正常运行状态，并调用自定义的onReady()函数。此状态下就可以通过 this.setData 函数发送界面数据给界面线程进行局部渲染，更新页面。<br>后台运行状态：如果界面进入后台，服务线程就进入后台运行状态，从目前的官方解读来说，这个状态挺奇怪的，和激活状态是相同的，也可以通过setdata函数更新界面的。毕竟小程序的框架刚推出，应该后续会有很大不同吧。<br>结束状态：页面被回收或者销毁、应用被系统回收、销毁时触发。</p>
+<p>当我们直接启动小程序的时候，首先调用的是app.js中的onlaunch方法和onShow方法，同时还会执行主页面的onload方法和onshow方法以及onReady方法。</p>
+<p>onlaunch：当小程序初始化完成时，会触发 onLaunch（全局只触发一次）；</p>
+<p>onShow:当小程序启动，或从后台进入前台显示，会触发 onShow；</p>
+<p>主页面onLoad：加载页面；</p>
+<p>onshow：页面显示；</p>
+<p>onReady：页面初次渲染完成；</p>
+<p>整个页面加载完成后，我们开始操作主页面，当从主页面跳转到另一个新页面时，有两种跳转方法(wx.navigateTo和wx.redirectTo)，如果跳转执行navigateTo方法，</p>
+<p>此时主页面会执行onHide方法，新页面会依次执行onLoad、onShow、onReady方法。当新页面返回主页面时，这时候新页面会调用onUnload方法，主页面又会调用onShow方法。</p>
+<p>如果跳转执行的是的redirectTo方法时，主页面会执行onUnload方法（卸载），新页面会相继执行onLoad、onShow、onReady。这时候不能返回到主页面，因为redirectTo方法是将新页面覆盖原页面，而原页面已被卸载。</p>
+<p>这就是小程序页面的生命周期。</p>
+<p><strong>应用的生命周期对页面生命周期的影响</strong><br><img src="/images/3133209-53f51875490c7b35.png" alt="3133209-53f51875490c7b35"></p>
+<h2 id="UML用例图"><a href="#UML用例图" class="headerlink" title="UML用例图"></a>UML用例图</h2><p>用例图的4个基本组件：<code>参与者(Actor)</code>、<code>用例(Use Case)</code>、<code>关系(Relationship)</code>和<code>系统(system)</code>。 </p>
 <h4 id="泛化-generalization-："><a href="#泛化-generalization-：" class="headerlink" title="泛化(generalization)："></a>泛化(generalization)：</h4><p>泛化关系是一种继承关系，子用例将继承基用例的所有行为，关系和通信关系，也就是说在任何使用基用例的地方都可以用子用例来代替。泛化关系在用例图中使用空心的箭头表示，箭头方向从子用例指向基用例。</p>
 <h4 id="扩展-extend-："><a href="#扩展-extend-：" class="headerlink" title="扩展(extend)："></a>扩展(extend)：</h4><p>extend关系是对基用例的扩展，基用例是一个完整的用例，即使没有子用例的参与，也可以完成一个完整的功能。extend的基用例中将存在一个扩展点，只有当扩展点被激活时，子用例才会被执行。 extend关系在用例图中使用带箭头的虚线表示(在线上标注&lt;<extend>&gt;)，箭头从子用例指向基用例。</extend></p>
 <h4 id="包含-include-："><a href="#包含-include-：" class="headerlink" title="包含(include)："></a>包含(include)：</h4><p>include为包含关系，当两个或多个用例中共用一组相同的动作，这时可以将这组相同的动作抽出来作为一个独立的子用例，供多个基用例所共享。因为子用例被抽出，基用例并非一个完整的用例，所以include关系中的基用例必须和子用例一起使用才够完整，子用例也必然被执行。include关系在用例图中使用带箭头的虚线表示(在线上标注&lt;<include>&gt;)，箭头从基用例指向子用例。</include></p>
