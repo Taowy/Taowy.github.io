@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.0.5" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.0.5">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.0.5">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.0.5">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.0.5" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '6.0.5',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+<meta name="description" content="用例建模a.阅读 Asg_RH 文档，绘制用例图。 按 Task1 要求，请使用工具 UMLet，截图格式务必是 png 并控制尺寸页面一：输入地点，入住时间，搜索按键来搜索酒店。 页面二：页面一输入的地点不在数据库中，则按照地区进行搜索。 页面三：通知用户预定酒店流程，包括搜索、选择酒店、选择房间类型、确认预定。重述用户的需求以及查询出的酒店列表。 页面四：进入某一酒店的预订界面。输入入住日期和">
+<meta property="og:type" content="article">
+<meta property="og:title" content="系统分析与设计作业_4">
+<meta property="og:url" content="https://taowy.github.io/2018/04/22/hw4/index.html">
+<meta property="og:site_name" content="Ditto.">
+<meta property="og:description" content="用例建模a.阅读 Asg_RH 文档，绘制用例图。 按 Task1 要求，请使用工具 UMLet，截图格式务必是 png 并控制尺寸页面一：输入地点，入住时间，搜索按键来搜索酒店。 页面二：页面一输入的地点不在数据库中，则按照地区进行搜索。 页面三：通知用户预定酒店流程，包括搜索、选择酒店、选择房间类型、确认预定。重述用户的需求以及查询出的酒店列表。 页面四：进入某一酒店的预订界面。输入入住日期和">
+<meta property="og:locale" content="zh-hans">
+<meta property="og:image" content="https://taowy.github.io/images/9F3EF3F1-18C7-448A-A075-83A67D57D779.png">
+<meta property="og:image" content="https://taowy.github.io/images/D7F1D828-9F87-4B53-89D4-988B451B6ED4.png">
+<meta property="og:image" content="https://taowy.github.io/images/8482A7F1-4C0A-49B5-BF1C-A69FF6F7E1DD.png">
+<meta property="og:image" content="https://taowy.github.io/images/28E389D9-B47F-42DF-B737-37DF40B5FA88.png">
+<meta property="og:image" content="https://taowy.github.io/images/32701058-0511-48A0-8DA4-201E2D81EBB6.png">
+<meta property="og:image" content="https://taowy.github.io/images/B8A02FC7-ED54-46C4-881C-EBEB789F56D7.png">
+<meta property="og:image" content="https://taowy.github.io/images/new1.png">
+<meta property="og:image" content="https://taowy.github.io/images/92C08890-2C2C-41ED-80F8-08EAA002F0D8.png">
+<meta property="og:image" content="https://taowy.github.io/images/20180422044704647.png">
+<meta property="og:image" content="https://taowy.github.io/images/74ACA024-EA07-40CE-9178-6E5393EA88EE.png">
+<meta property="og:updated_time" content="2018-04-22T11:18:32.102Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="系统分析与设计作业_4">
+<meta name="twitter:description" content="用例建模a.阅读 Asg_RH 文档，绘制用例图。 按 Task1 要求，请使用工具 UMLet，截图格式务必是 png 并控制尺寸页面一：输入地点，入住时间，搜索按键来搜索酒店。 页面二：页面一输入的地点不在数据库中，则按照地区进行搜索。 页面三：通知用户预定酒店流程，包括搜索、选择酒店、选择房间类型、确认预定。重述用户的需求以及查询出的酒店列表。 页面四：进入某一酒店的预订界面。输入入住日期和">
+<meta name="twitter:image" content="https://taowy.github.io/images/9F3EF3F1-18C7-448A-A075-83A67D57D779.png">
+
+
+
+
+
+
+  <link rel="canonical" href="https://taowy.github.io/2018/04/22/hw4/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+  <title>系统分析与设计作业_4 | Ditto.</title>
+  
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"> <div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Ditto.</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            <i class="menu-item-icon fa fa-fw fa-home"></i> <br />Home</a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />Tags</a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            <i class="menu-item-icon fa fa-fw fa-th"></i> <br />Categories</a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+  
+
+
+
+ </div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://taowy.github.io/2018/04/22/hw4/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Wayen Tao">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/IMG_5592.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ditto.">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">系统分析与设计作业_4</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-04-22T19:01:59+08:00">2018-04-22</time>
+            
+
+            
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/系分作业/" itemprop="url" rel="index"><span itemprop="name">系分作业</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="用例建模"><a href="#用例建模" class="headerlink" title="用例建模"></a>用例建模</h2><h3 id="a-阅读-Asg-RH-文档，绘制用例图。-按-Task1-要求，请使用工具-UMLet，截图格式务必是-png-并控制尺寸"><a href="#a-阅读-Asg-RH-文档，绘制用例图。-按-Task1-要求，请使用工具-UMLet，截图格式务必是-png-并控制尺寸" class="headerlink" title="a.阅读 Asg_RH 文档，绘制用例图。 按 Task1 要求，请使用工具 UMLet，截图格式务必是 png 并控制尺寸"></a>a.阅读 Asg_RH 文档，绘制用例图。 按 Task1 要求，请使用工具 UMLet，截图格式务必是 png 并控制尺寸</h3><p>页面一：输入地点，入住时间，搜索按键来搜索酒店。</p>
+<p>页面二：页面一输入的地点不在数据库中，则按照地区进行搜索。</p>
+<p>页面三：通知用户预定酒店流程，包括搜索、选择酒店、选择房间类型、确认预定。重述用户的需求以及查询出的酒店列表。</p>
+<p>页面四：进入某一酒店的预订界面。输入入住日期和房间信息。若不可用返回无房间信息。</p>
+<p>页面五：用户确认订单。</p>
+<p>页面六：输入用户名。</p>
+<p>页面七：输入用户邮箱。</p>
+<p>页面八：付款流程的订单总额页面。</p>
+<p>页面九：付款流程的信用卡选择页面。</p>
+<p>页面十：付款流程的支付页面，邮箱返回预定成功信息。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">Actor</th>
+<th style="text-align:center">Goal</th>
+<th style="text-align:center">Sub-function</th>
+<th style="text-align:center">External Enties</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">Traveler</td>
+<td style="text-align:center">Search hotels</td>
+<td style="text-align:center">Search location</td>
+<td style="text-align:center">GPS</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">Reserve</td>
+<td style="text-align:center">Choose hotel、Choose room type、Choose date、Confirm</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">Pay</td>
+<td style="text-align:center">Select credit card</td>
+<td style="text-align:center">Email、Bank</td>
+</tr>
+</tbody>
+</table>
+<p><img src="/images/9F3EF3F1-18C7-448A-A075-83A67D57D779.png" alt="9F3EF3F1-18C7-448A-A075-83A67D57D779"></p>
+<h3 id="b-选择你熟悉的定旅馆在线服务系统（或移动-APP），如绘制用例图。并满足以下要求："><a href="#b-选择你熟悉的定旅馆在线服务系统（或移动-APP），如绘制用例图。并满足以下要求：" class="headerlink" title="b. 选择你熟悉的定旅馆在线服务系统（或移动 APP），如绘制用例图。并满足以下要求："></a>b. 选择你熟悉的定旅馆在线服务系统（或移动 APP），如绘制用例图。并满足以下要求：</h3><blockquote>
+<p>对比 Asg_RH 用例图，请用色彩标注出创新用例或子用例</p>
+</blockquote>
+<blockquote>
+<p>尽可能识别外部系统，并用色彩标注新的外部系统和服务 </p>
+</blockquote>
+<p><strong>携程预定酒店流程如下： </strong></p>
+<p><img src="/images/D7F1D828-9F87-4B53-89D4-988B451B6ED4.png" alt="D7F1D828-9F87-4B53-89D4-988B451B6ED4"></p>
+<p><img src="/images/8482A7F1-4C0A-49B5-BF1C-A69FF6F7E1DD.png" alt="8482A7F1-4C0A-49B5-BF1C-A69FF6F7E1DD"></p>
+<p><img src="/images/28E389D9-B47F-42DF-B737-37DF40B5FA88.png" alt="28E389D9-B47F-42DF-B737-37DF40B5FA88"></p>
+<p><img src="/images/32701058-0511-48A0-8DA4-201E2D81EBB6.png" alt="32701058-0511-48A0-8DA4-201E2D81EBB6"></p>
+<p><img src="/images/B8A02FC7-ED54-46C4-881C-EBEB789F56D7.png" alt="B8A02FC7-ED54-46C4-881C-EBEB789F56D7"></p>
+<p>页面一：输入地点，入住时间，房间类型，酒店级别，关键字来搜索酒店。若无直接根据附近地区修改。</p>
+<p>页面二：重述用户的需求并可以进行修改，改变排序方式，以及查询出的酒店列表。以及在地图显示地理位置，酒店信息，酒店交通大致信息。</p>
+<p>页面三：进入某一酒店的预订界面。显示酒店可以预定的房型列表。</p>
+<p>页面四：用户确认订单。输入姓名，手机号，邮箱可选。以及可选保险。</p>
+<p>页面五：支付页面，选择支付方式支付。</p>
+<p>页面六：支付成功页面，手机短信返回预定成功信息。（未体现）</p>
+<p>页面七：评价页面，评价入住体验。（未体现）</p>
+<table>
+<thead>
+<tr>
+<th>Actor</th>
+<th>Goal</th>
+<th>Sub-function</th>
+<th>External Enties</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Traveler</td>
+<td>Search hotels</td>
+<td>Choose location、Choose date、Choose key words、choose level</td>
+<td>GPS</td>
+</tr>
+<tr>
+<td></td>
+<td>Choose details</td>
+<td>Resort list，Get hotel information，Get traffic information</td>
+<td>Map App</td>
+</tr>
+<tr>
+<td></td>
+<td>Reserve</td>
+<td>Choose room type、Choose hotel、Choose Insurance、Confirm</td>
+<td>Insurance Corp</td>
+</tr>
+<tr>
+<td></td>
+<td>Pay</td>
+<td>Select payment type</td>
+<td>Email、Mobile Communications Corp（MCC）、Payment Platform</td>
+</tr>
+<tr>
+<td></td>
+<td>Evaluation</td>
+<td>Evaluation Experience</td>
+<td>Credit rating Corp</td>
+</tr>
+</tbody>
+</table>
+<p><img src="/images/new1.png" alt="new1"></p>
+<h3 id="c-对比两个时代、不同地区产品的用例图，总结在项目早期，发现创新的思路与方法"><a href="#c-对比两个时代、不同地区产品的用例图，总结在项目早期，发现创新的思路与方法" class="headerlink" title="c. 对比两个时代、不同地区产品的用例图，总结在项目早期，发现创新的思路与方法"></a>c. 对比两个时代、不同地区产品的用例图，总结在项目早期，发现创新的思路与方法</h3><ul>
+<li>简化整合流程，减少页面的数量，降低使用成本。将必要的信息集中处理，减少分散在多个页面的情况。</li>
+<li>结合最新的外部系统。如新的支付方式第三方支付等，加入出行保险，多方位提供服务。手机短信代替邮件。地图显示地理位置等。</li>
+</ul>
+<h3 id="d-请使用-SCRUM-方法，在（任务b）用例图基础上，编制某定旅馆开发的需求-（backlog）"><a href="#d-请使用-SCRUM-方法，在（任务b）用例图基础上，编制某定旅馆开发的需求-（backlog）" class="headerlink" title="d.请使用 SCRUM 方法，在（任务b）用例图基础上，编制某定旅馆开发的需求 （backlog）"></a>d.请使用 SCRUM 方法，在（任务b）用例图基础上，编制某定旅馆开发的需求 （backlog）</h3><p>搜索酒店：选择地区、日期、关键字，酒店星级，点击搜索。<br>展示详情：展现酒店具体地理位置，酒店具体信息和到达酒店交通情况。<br>预定酒店：选择酒店，房间类型，是否购买保险，显示订单详情并确认。<br>支付订单：选择支付方式，跳转到支付系统 ，根据填入的手机号和邮箱返回信息。<br>用户反馈：收集用户反馈信息和评分。</p>
+<h2 id="业务建模"><a href="#业务建模" class="headerlink" title="业务建模"></a>业务建模</h2><h3 id="a-在（任务b）基础上，用活动图建模找酒店用例。简述利用流程图发现子用例的方法"><a href="#a-在（任务b）基础上，用活动图建模找酒店用例。简述利用流程图发现子用例的方法" class="headerlink" title="a. 在（任务b）基础上，用活动图建模找酒店用例。简述利用流程图发现子用例的方法"></a>a. 在（任务b）基础上，用活动图建模找酒店用例。简述利用流程图发现子用例的方法</h3><p><img src="/images/92C08890-2C2C-41ED-80F8-08EAA002F0D8.png" alt="92C08890-2C2C-41ED-80F8-08EAA002F0D8"></p>
+<blockquote>
+<p>利用流程图发现子用例：沿流程图状态传递，任意一个的分支点到流程图的结束状态，就是一个子用例</p>
+</blockquote>
+<h3 id="b-选择你身边的银行-ATM，用活动图描绘取款业务流程"><a href="#b-选择你身边的银行-ATM，用活动图描绘取款业务流程" class="headerlink" title="b. 选择你身边的银行 ATM，用活动图描绘取款业务流程"></a>b. 选择你身边的银行 ATM，用活动图描绘取款业务流程</h3><p><img src="/images/20180422044704647.png" alt="20180422044704647"></p>
+<h3 id="c-查找淘宝退货业务官方文档，使用多泳道图，表达客户、淘宝网、淘宝商家服务系统、商家等用户和系统协同完成退货业务的过程。分析客户要完成退货业务，在淘宝网上需要实现哪些系统用例"><a href="#c-查找淘宝退货业务官方文档，使用多泳道图，表达客户、淘宝网、淘宝商家服务系统、商家等用户和系统协同完成退货业务的过程。分析客户要完成退货业务，在淘宝网上需要实现哪些系统用例" class="headerlink" title="c.  查找淘宝退货业务官方文档，使用多泳道图，表达客户、淘宝网、淘宝商家服务系统、商家等用户和系统协同完成退货业务的过程。分析客户要完成退货业务，在淘宝网上需要实现哪些系统用例"></a>c.  查找淘宝退货业务官方文档，使用多泳道图，表达客户、淘宝网、淘宝商家服务系统、商家等用户和系统协同完成退货业务的过程。分析客户要完成退货业务，在淘宝网上需要实现哪些系统用例</h3><p><img src="/images/74ACA024-EA07-40CE-9178-6E5393EA88EE.png" alt="74ACA024-EA07-40CE-9178-6E5393EA88EE"></p>
+<h2 id="用例文本编写"><a href="#用例文本编写" class="headerlink" title="用例文本编写"></a>用例文本编写</h2><h3 id="在大作业基础上，分析三种用例文本的优点和缺点"><a href="#在大作业基础上，分析三种用例文本的优点和缺点" class="headerlink" title="在大作业基础上，分析三种用例文本的优点和缺点"></a>在大作业基础上，分析三种用例文本的优点和缺点</h3><table>
+<thead>
+<tr>
+<th style="text-align:center"></th>
+<th style="text-align:center">摘要</th>
+<th style="text-align:center">非正式</th>
+<th style="text-align:center">详述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">优点</td>
+<td style="text-align:center">简洁，快速了解主题和范围</td>
+<td style="text-align:center">简洁，用几个段落就可以覆盖不同的场景</td>
+<td style="text-align:center">可以详细地编写所有的步骤及各种变化</td>
+</tr>
+<tr>
+<td style="text-align:center">缺点</td>
+<td style="text-align:center">只用于主成功场景</td>
+<td style="text-align:center">信息量少 只做快速了解主题和范围之用</td>
+<td style="text-align:center">耗时，工作量大</td>
+</tr>
+</tbody>
+</table>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/04/10/hw3/" rel="next" title="系统分析与设计作业_3-学习总结">
+                <i class="fa fa-chevron-left"></i> 系统分析与设计作业_3-学习总结
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/IMG_5592.png"
+                alt="Wayen Tao" />
+            
+              <p class="site-author-name" itemprop="name">Wayen Tao</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives">
+                
+                    <span class="site-state-item-count">4</span>
+                    <span class="site-state-item-name">posts</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index-1.html">
+                    
+                    
+                      
+                    
+                    <span class="site-state-item-count">1</span>
+                    <span class="site-state-item-name">categories</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                    <span class="site-state-item-count">1</span>
+                    <span class="site-state-item-name">tags</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#用例建模"><span class="nav-number">1.</span> <span class="nav-text">用例建模</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#a-阅读-Asg-RH-文档，绘制用例图。-按-Task1-要求，请使用工具-UMLet，截图格式务必是-png-并控制尺寸"><span class="nav-number">1.1.</span> <span class="nav-text">a.阅读 Asg_RH 文档，绘制用例图。 按 Task1 要求，请使用工具 UMLet，截图格式务必是 png 并控制尺寸</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#b-选择你熟悉的定旅馆在线服务系统（或移动-APP），如绘制用例图。并满足以下要求："><span class="nav-number">1.2.</span> <span class="nav-text">b. 选择你熟悉的定旅馆在线服务系统（或移动 APP），如绘制用例图。并满足以下要求：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#c-对比两个时代、不同地区产品的用例图，总结在项目早期，发现创新的思路与方法"><span class="nav-number">1.3.</span> <span class="nav-text">c. 对比两个时代、不同地区产品的用例图，总结在项目早期，发现创新的思路与方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#d-请使用-SCRUM-方法，在（任务b）用例图基础上，编制某定旅馆开发的需求-（backlog）"><span class="nav-number">1.4.</span> <span class="nav-text">d.请使用 SCRUM 方法，在（任务b）用例图基础上，编制某定旅馆开发的需求 （backlog）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#业务建模"><span class="nav-number">2.</span> <span class="nav-text">业务建模</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#a-在（任务b）基础上，用活动图建模找酒店用例。简述利用流程图发现子用例的方法"><span class="nav-number">2.1.</span> <span class="nav-text">a. 在（任务b）基础上，用活动图建模找酒店用例。简述利用流程图发现子用例的方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#b-选择你身边的银行-ATM，用活动图描绘取款业务流程"><span class="nav-number">2.2.</span> <span class="nav-text">b. 选择你身边的银行 ATM，用活动图描绘取款业务流程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#c-查找淘宝退货业务官方文档，使用多泳道图，表达客户、淘宝网、淘宝商家服务系统、商家等用户和系统协同完成退货业务的过程。分析客户要完成退货业务，在淘宝网上需要实现哪些系统用例"><span class="nav-number">2.3.</span> <span class="nav-text">c.  查找淘宝退货业务官方文档，使用多泳道图，表达客户、淘宝网、淘宝商家服务系统、商家等用户和系统协同完成退货业务的过程。分析客户要完成退货业务，在淘宝网上需要实现哪些系统用例</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#用例文本编写"><span class="nav-number">3.</span> <span class="nav-text">用例文本编写</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#在大作业基础上，分析三种用例文本的优点和缺点"><span class="nav-number">3.1.</span> <span class="nav-text">在大作业基础上，分析三种用例文本的优点和缺点</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Wayen Tao</span>
+
+  
+
+  
+</div>
+
+
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/theme-next/hexo-theme-next">NexT.Mist</a> v6.0.5</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.0.5"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.0.5"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.0.5"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.0.5"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.0.5"></script>
+
+
+
+  
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
