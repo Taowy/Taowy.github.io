@@ -1112,6 +1112,160 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://taowy.github.io/2018/05/03/button/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Wayen Tao">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/IMG_5592.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ditto.">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/05/03/button/" itemprop="url">button组件在使用中的心得</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-05-03T14:59:03+08:00">2018-05-03</time>
+            
+
+            
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/系分博客/" itemprop="url" rel="index"><span itemprop="name">系分博客</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote>
+<p> 在本次前端代码的编写过程中，我负责的主要是活动详情和报名页面。在两个页面中，均存在buttom组件的应用。在这里我简单记录下这一组件的使用方法。</p>
+</blockquote>
+<p><strong>小程序中的button除了是个单纯的按钮之外包含很多其他功能</strong>,除了前边有一些很基本的的如<code>size</code>,<code>type</code>,<code>plain</code>, <code>disabled</code>,<code>loading</code>等这类比较常规的选项之外，后边还有一些其他我感觉有点新鲜的功能。</p>
+<p><img src="/images/20170830113839147.jpeg" alt="20170830113839147"></p>
+<h4 id="1-首先是hover-stop-propagation"><a href="#1-首先是hover-stop-propagation" class="headerlink" title="1. 首先是hover-stop-propagation"></a>1. 首先是hover-stop-propagation</h4><p>看名字就能看出来是阻止冒泡。作用是阻止本节点的祖先节点先出现点击态，默认false，这一次就用到了这个。</p>
+<h4 id="2-hover-start-time和hover-stay-time"><a href="#2-hover-start-time和hover-stay-time" class="headerlink" title="2. hover-start-time和hover-stay-time"></a>2. hover-start-time和hover-stay-time</h4><p>分别表示按住后多久出现点击状态以及手指松开后点击状态保留时间，单位毫秒。</p>
+<h4 id="3-bindgetuserinfo"><a href="#3-bindgetuserinfo" class="headerlink" title="3. bindgetuserinfo"></a>3. bindgetuserinfo</h4><p>用户点击该按钮时，会返回获取到的用户信息，从返回参数的detail中获取到的值同<a href="https://mp.weixin.qq.com/debug/wxadoc/dev/api/open.html#wxgetuserinfoobject" target="_blank" rel="noopener">wx.getUserInfo</a></p>
+<h4 id="4-session-from-send-message-title-send-message-path-send-message-img-show-message-card-bindcontact"><a href="#4-session-from-send-message-title-send-message-path-send-message-img-show-message-card-bindcontact" class="headerlink" title="4. session-from, send-message-title, send-message-path, send-message-img, show-message-card, bindcontact"></a>4. session-from, send-message-title, send-message-path, send-message-img, show-message-card, bindcontact</h4><p>均显示open-type=”contact”，与客服消息有关。暂时还用不到。</p>
+<p><code>&lt;button open-type=&quot;contact&quot;&gt;进入客服会话&lt;/button&gt;</code></p>
+<h4 id="5-bindgettphonenumber"><a href="#5-bindgettphonenumber" class="headerlink" title="5.bindgettphonenumber"></a>5.bindgettphonenumber</h4><p>获取用户手机号回调</p>
+<h4 id="6-open-type有效值："><a href="#6-open-type有效值：" class="headerlink" title="6. open-type有效值："></a>6. open-type有效值：</h4><p><img src="/images/20170830151412436.png" alt="20170830151412436"></p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">view</span> <span class="attr">class</span>=<span class="string">"&#123;&#123;'blue-button'&#125;&#125;"</span> <span class="attr">bindtap</span>=<span class="string">"&#123;&#123;'enrollButtonTap'&#125;&#125;"</span> <span class="attr">data-poster-id</span>=<span class="string">"&#123;&#123;currentPoster.posterId&#125;&#125;"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">view</span> <span class="attr">class</span>=<span class="string">"&#123;&#123;'button-innerText'&#125;&#125;"</span>&gt;</span>&#123;&#123;statusText[0]&#125;&#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">view</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">view</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://taowy.github.io/2018/04/29/hw5/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1900,184 +2054,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://taowy.github.io/2018/03/19/hw2/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Wayen Tao">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/IMG_5592.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Ditto.">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/03/19/hw2/" itemprop="url">系统分析与设计作业_2</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-03-19T10:31:25+08:00">2018-03-19</time>
-            
-
-            
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/系分作业/" itemprop="url" rel="index"><span itemprop="name">系分作业</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h4 id="简答题"><a href="#简答题" class="headerlink" title="简答题"></a>简答题</h4><h5 id="简述瀑布模型、增量模型、螺旋模型（含原型方法）的优缺点"><a href="#简述瀑布模型、增量模型、螺旋模型（含原型方法）的优缺点" class="headerlink" title="- 简述瀑布模型、增量模型、螺旋模型（含原型方法）的优缺点"></a>- 简述瀑布模型、增量模型、螺旋模型（含原型方法）的优缺点</h5><p><strong>瀑布模型：</strong></p>
-<ul>
-<li>优点：有利于大型软件开发过程中人员的组织、管理，有利于软件开发方法和工具的- 研究，从而提高了大型软件项目开发的质量和效率。</li>
-<li>缺点：（1）开发过程一般不能逆转，否则代价太大；（2）实际的项目开发很难严格按该模型进行；（3）客户往往很难清楚地给出所有的需求，而该模型却要求如此。（4）软件的实际情况必须到项目开发的后期客户才能看到，这要求客户有足够的耐心。</li>
-</ul>
-<p><strong>增量模型：</strong></p>
-<ul>
-<li>优点：（1）采用增量模型的优点是人员分配灵活，刚开始不用投入大量人力资源；（2）如果核心产品很受欢迎，则可增加人力实现下一个增量；（3）可先发布部分功能给客户，对客户起到镇静剂的作用。</li>
-<li>缺点：（1）并行开发构件有可能遇到不能集成的风险，软件必须具备开放式的体系结构；（2）增量模型的灵活性可以使其适应这种变化的能力大大优于瀑布模型和快速原型模型，但也很容易退化为边做边改模型，从而是软件过程的控制失去整体性。</li>
-</ul>
-<p><strong>螺旋模型：</strong></p>
-<ul>
-<li>优点：（1）设计上的灵活性,可以在项目的各个阶段进行变更；（2）以小的分段来构建大型系统,使成本计算变得简单容易；（3）客户始终参与每个阶段的开发,保证了项目不偏离正确方向以及项目的可控性；（4） 随着项目推进,客户始终掌握项目的最新信息 , 从而他或她能够和管理层有效地交互。</li>
-<li>缺点：（1）采用螺旋模型需要具有相当丰富的风险评估经验和专门知识，在风险较大的项目开发中，如果未能够及时标识风险，势必造成重大损失；（2）过多的迭代次数会增加开发成本，延迟提交时间。</li>
-</ul>
-<h5 id="简述-UP-的三大特点，其中哪些内容体现了用户驱动的开发，哪些内容体现风险驱动的开发"><a href="#简述-UP-的三大特点，其中哪些内容体现了用户驱动的开发，哪些内容体现风险驱动的开发" class="headerlink" title="- 简述 UP 的三大特点，其中哪些内容体现了用户驱动的开发，哪些内容体现风险驱动的开发"></a>- 简述 UP 的三大特点，其中哪些内容体现了用户驱动的开发，哪些内容体现风险驱动的开发</h5><p>三大特点：基于UML的、以构架为中心、用例驱动与风险驱动相结合。</p>
-<p><strong>用户驱动开发：</strong></p>
-<p>迭代开发与增量开发过程</p>
-<p><strong>风险驱动开发：</strong></p>
-<p>迭代计划安排是风险驱动的，高风险因素在前两个阶段解决，降低了系统风险</p>
-<h5 id="UP-四个阶段的划分准则是什么？关键的里程碑是什么"><a href="#UP-四个阶段的划分准则是什么？关键的里程碑是什么" class="headerlink" title="- UP 四个阶段的划分准则是什么？关键的里程碑是什么"></a>- UP 四个阶段的划分准则是什么？关键的里程碑是什么</h5><p><strong>四个阶段的划分准则：</strong></p>
-<p>软件开发生命周期根据时间和RUP的核心工作流程划分。</p>
-<p><strong>关键的里程碑：</strong></p>
-<p>四个顺序的阶段：<strong>初始阶段、精化阶段、构建阶段和产品交付阶段</strong></p>
-<ul>
-<li>生命周期目标里程碑。包括一些重要的文档，需要对这些文档进行评审，以确定用例需求，项目风险评估合理，阶段计划可行等。</li>
-<li>生命周期体系结构里程碑。通过评审确定软件体系结构已经稳定、高风险的业务需求和技术机制已经解决、修订的项目计划可行等。</li>
-<li>初始运行能力里程碑。包括可以运行的软件产品、用户手册等，它决定了产品是否可以在测试环境中进行部署。此刻，要确定软件、环境、用户是否可以开始系统的运行。</li>
-<li>产品发布里程碑。确定最终目标是否实现，是否应该开始产品下一个版本的另一个开发周期。在一些情况下这个里程碑可能与下一个周期的初始阶段的相重合。</li>
-</ul>
-<h5 id="IT-项目管理中，“工期、质量、范围-内容”-三个元素中，在合同固定条件下，为什么说“范围-内容”是项目团队是易于控制的"><a href="#IT-项目管理中，“工期、质量、范围-内容”-三个元素中，在合同固定条件下，为什么说“范围-内容”是项目团队是易于控制的" class="headerlink" title="- IT 项目管理中，“工期、质量、范围/内容” 三个元素中，在合同固定条件下，为什么说“范围/内容”是项目团队是易于控制的"></a>- IT 项目管理中，“工期、质量、范围/内容” 三个元素中，在合同固定条件下，为什么说“范围/内容”是项目团队是易于控制的</h5><p>范围/内容是团队和客户商讨范围之内的，客户最初提出的要求不明确，团队对客户的需求进行分析，并用户进行讨论，从而对范围/内容进行不断修改和完善。因此范围内容是易于控制的。</p>
-<h5 id="为什么说，UP-为企业按固定节奏生产、固定周期发布软件产品提供了依据"><a href="#为什么说，UP-为企业按固定节奏生产、固定周期发布软件产品提供了依据" class="headerlink" title="- 为什么说，UP 为企业按固定节奏生产、固定周期发布软件产品提供了依据"></a>- 为什么说，UP 为企业按固定节奏生产、固定周期发布软件产品提供了依据</h5><p>UP中，软件开发生命周期根据时间和RUP的核心工作流划分为二维空间。时间维从组织管理的角度描述整个软件开发生命周期，是RUP的动态组成部分，核心工作流从技术角度描述RUP的静态组成部分。这些都为企业按照固定节奏生产、固定周期发布软件产品提供了依据。</p>
-<h4 id="项目管理使用"><a href="#项目管理使用" class="headerlink" title="项目管理使用"></a>项目管理使用</h4><h5 id="使用截图工具（png格式输出），展现你团队的任务-Kanban，请注意以下要求"><a href="#使用截图工具（png格式输出），展现你团队的任务-Kanban，请注意以下要求" class="headerlink" title="- 使用截图工具（png格式输出），展现你团队的任务 Kanban，请注意以下要求"></a>- 使用截图工具（png格式输出），展现你团队的任务 Kanban，请注意以下要求</h5><ul>
-<li><strong>每个人的任务是明确的。即一周后可以看到具体成果</strong></li>
-<li><strong>每个人的任务是1-2项</strong></li>
-<li><strong>至少包含一个团队活动任务</strong><br><img src="/images/062BF186-04FC-4019-A998-B99E530649CA.png" alt="062BF186-04FC-4019-A998-B99E530649CA"><br><img src="/images/7B1DAEA9-ED97-4295-BD96-9A2F0F874462.png" alt="7B1DAEA9-ED97-4295-BD96-9A2F0F874462"></li>
-</ul>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2129,7 +2105,7 @@
                 
                   <a href="/archives">
                 
-                    <span class="site-state-item-count">11</span>
+                    <span class="site-state-item-count">12</span>
                     <span class="site-state-item-name">posts</span>
                   </a>
                 </div>
