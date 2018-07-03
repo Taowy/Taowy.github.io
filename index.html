@@ -267,6 +267,193 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://taowy.github.io/2018/07/03/mockjs/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Wayen Tao">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/IMG_5592.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ditto.">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/07/03/mockjs/" itemprop="url">mockjs应用在VUE设计中的尝试</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-07-03T14:39:15+08:00">2018-07-03</time>
+            
+
+            
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/系分博客/" itemprop="url" rel="index"><span itemprop="name">系分博客</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>关于mockjs，官网描述的是</p>
+<blockquote>
+<p>1.前后端分离</p>
+<p>2.不需要修改既有代码，就可以拦截 Ajax 请求，返回模拟的响应数据。</p>
+<p>3.数据类型丰富</p>
+<p>4.通过随机数据，模拟各种场景。</p>
+</blockquote>
+<p>总结起来就是在后端接口没有开发完成之前，前端可以用已有的接口文档，在真实的请求上拦截ajax，并根据mockjs的mock数据的规则，模拟真实接口返回的数据，并将随机的模拟数据返回参与相应的数据交互处理，这样真正实现了前后台的分离开发。</p>
+<p>与以往的自己模拟的假数据不同，mockjs可以带给我们的是：在后台接口未开发完成之前模拟数据，并返回，完成前台的交互；在后台数据完成之后，你所做的只是去掉mockjs：停止拦截真实的ajax，仅此而已。</p>
+<p>在项目中尝试了mockjs，mock数据，实现前后端分离开发。</p>
+<p><strong>1.安装vue-cli全局脚手架</strong></p>
+<blockquote>
+<p>npm install –global vue-cli</p>
+</blockquote>
+<p><strong>2.创建vue项目</strong></p>
+<blockquote>
+<p>vue init webpack mockjs<br> cd mockjs<br>npm install axios –save</p>
+</blockquote>
+<p><strong>3.安装mockjs</strong></p>
+<blockquote>
+<p>npm install mockjs –save-dev</p>
+</blockquote>
+<p><strong>在安装过程中我出现了以下问题</strong>：</p>
+<blockquote>
+<p>npm install stylus-loader 警告</p>
+</blockquote>
+<p>需要另外一个组件支持，</p>
+<p><strong>npm install –save stylus stylus-loader</strong></p>
+<p>这样搭建好VUE，项目目录如下：</p>
+<p><img src="/images/1013797-20170807221707424-507569416.png" alt="1013797-20170807221707424-507569416"></p>
+<p>axios/api    用来封装axios</p>
+<p>Hello.vue     页面首页</p>
+<p>NeswCell.vue   新闻组件</p>
+<p>router/index.js   路由</p>
+<p>main.js      入口js</p>
+<p>mock.js     mockjs文件</p>
+<p><strong>5.在入口js里引入mockjs</strong></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// The Vue build version to load with the `import` command</span></span><br><span class="line"><span class="comment">// (runtime-only or standalone) has been set in webpack.base.conf with an alias.</span></span><br><span class="line"><span class="keyword">import</span> Vue <span class="keyword">from</span> <span class="string">'vue'</span></span><br><span class="line"><span class="keyword">import</span> App <span class="keyword">from</span> <span class="string">'./App'</span></span><br><span class="line"><span class="keyword">import</span> router <span class="keyword">from</span> <span class="string">'./router'</span></span><br><span class="line"></span><br><span class="line">Vue.config.productionTip = <span class="literal">false</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 引入mockjs</span></span><br><span class="line"><span class="built_in">require</span>(<span class="string">'./mock.js'</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">/* eslint-disable no-new */</span></span><br><span class="line"><span class="keyword">new</span> Vue(&#123;</span><br><span class="line">el: <span class="string">'#app'</span>,</span><br><span class="line">router,</span><br><span class="line">template: <span class="string">'&lt;App/&gt;'</span>,</span><br><span class="line">components: &#123;</span><br><span class="line">App</span><br><span class="line">&#125;</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">Vue.filter(<span class="string">'getYMD'</span>, <span class="function"><span class="keyword">function</span>(<span class="params">input</span>) </span>&#123;</span><br><span class="line"><span class="keyword">return</span> input.split(<span class="string">' '</span>)[<span class="number">0</span>];</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p><strong>6. 添加一个mock规则</strong></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 引入mockjs</span></span><br><span class="line"><span class="keyword">const</span> Mock = <span class="built_in">require</span>(<span class="string">'mockjs'</span>);</span><br><span class="line"><span class="comment">// 获取 mock.Random 对象</span></span><br><span class="line"><span class="keyword">const</span> Random = Mock.Random;</span><br><span class="line"><span class="comment">// mock一组数据</span></span><br><span class="line"><span class="keyword">const</span> produceNewsData = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line"><span class="keyword">let</span> articles = [];</span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; <span class="number">100</span>; i++) &#123;</span><br><span class="line"><span class="keyword">let</span> newArticleObject = &#123;</span><br><span class="line">title: Random.csentence(<span class="number">5</span>, <span class="number">30</span>), <span class="comment">//  Random.csentence( min, max )</span></span><br><span class="line">thumbnail_pic_s: Random.dataImage(<span class="string">'300x250'</span>, <span class="string">'mock的图片'</span>), <span class="comment">// Random.dataImage( size, text ) 生成一段随机的 Base64 图片编码</span></span><br><span class="line">author_name: Random.cname(), <span class="comment">// Random.cname() 随机生成一个常见的中文姓名</span></span><br><span class="line">date: Random.date() + <span class="string">' '</span> + Random.time() <span class="comment">// Random.date()指示生成的日期字符串的格式,默认为yyyy-MM-dd；Random.time() 返回一个随机的时间字符串</span></span><br><span class="line">&#125;</span><br><span class="line">articles.push(newArticleObject)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">return</span> &#123;</span><br><span class="line">articles: articles</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Mock.mock( url, post/get , 返回的数据)；</span></span><br><span class="line">Mock.mock(<span class="string">'/news/index'</span>, <span class="string">'post'</span>, produceNewsData);</span><br></pre></td></tr></table></figure>
+<p><strong>7. 在Hello.vue 中请求文档接口，并接收mock数据</strong></p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">template</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"index"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">v-for</span>=<span class="string">"(item, key) in newsListShow"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">news-cell</span></span></span><br><span class="line"><span class="tag"><span class="attr">:newsDate</span>=<span class="string">"item"</span></span></span><br><span class="line"><span class="tag"><span class="attr">:key</span>=<span class="string">"key"</span></span></span><br><span class="line"><span class="tag">&gt;</span><span class="tag">&lt;/<span class="name">news-cell</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">template</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="undefined"></span></span><br><span class="line"><span class="javascript"><span class="keyword">import</span> api <span class="keyword">from</span> <span class="string">'./../axios/api.js'</span></span></span><br><span class="line"><span class="javascript"><span class="keyword">import</span> NewsCell <span class="keyword">from</span> <span class="string">'./NewsCell.vue'</span></span></span><br><span class="line"><span class="undefined"></span></span><br><span class="line"><span class="javascript"><span class="keyword">export</span> <span class="keyword">default</span> &#123;</span></span><br><span class="line"><span class="javascript">name: <span class="string">'index'</span>,</span></span><br><span class="line"><span class="undefined">data () &#123;</span></span><br><span class="line"><span class="javascript"><span class="keyword">return</span> &#123;</span></span><br><span class="line"><span class="undefined">newsListShow: [],</span></span><br><span class="line"><span class="undefined">&#125;</span></span><br><span class="line"><span class="undefined">&#125;,</span></span><br><span class="line"><span class="undefined">components: &#123;</span></span><br><span class="line"><span class="undefined">NewsCell</span></span><br><span class="line"><span class="undefined">&#125;,</span></span><br><span class="line"><span class="undefined">created() &#123;</span></span><br><span class="line"><span class="javascript"><span class="keyword">this</span>.setNewsApi();</span></span><br><span class="line"><span class="undefined">&#125;,</span></span><br><span class="line"><span class="undefined">methods:&#123;</span></span><br><span class="line"><span class="javascript">setNewsApi: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span></span><br><span class="line"><span class="javascript">api.JH_news(<span class="string">'/news/index'</span>, <span class="string">'type=top&amp;key=123456'</span>)</span></span><br><span class="line"><span class="javascript">.then(<span class="function"><span class="params">res</span> =&gt;</span> &#123;</span></span><br><span class="line"><span class="javascript"><span class="built_in">console</span>.log(res);</span></span><br><span class="line"><span class="javascript"><span class="keyword">this</span>.newsListShow = res.articles;</span></span><br><span class="line"><span class="undefined">&#125;);</span></span><br><span class="line"><span class="undefined">&#125;,</span></span><br><span class="line"><span class="undefined">&#125;</span></span><br><span class="line"><span class="undefined">&#125;</span></span><br><span class="line"><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- Add "scoped" attribute to limit CSS to this component only --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">style</span> <span class="attr">scoped</span>&gt;</span><span class="undefined"></span></span><br><span class="line"><span class="undefined">.topNav&#123;</span></span><br><span class="line"><span class="undefined">width: 100%;</span></span><br><span class="line"><span class="undefined">background: #ED4040;</span></span><br><span class="line"><span class="undefined">position: fixed;</span></span><br><span class="line"><span class="undefined">top:0rem;</span></span><br><span class="line"><span class="undefined">left: 0;</span></span><br><span class="line"><span class="undefined">z-index: 10;</span></span><br><span class="line"><span class="undefined">&#125;</span></span><br><span class="line"><span class="undefined">.simpleNav&#123;</span></span><br><span class="line"><span class="undefined">width: 100%;</span></span><br><span class="line"><span class="undefined">line-height: 1rem;</span></span><br><span class="line"><span class="undefined">overflow: hidden;</span></span><br><span class="line"><span class="undefined">overflow-x: auto;</span></span><br><span class="line"><span class="undefined">text-align: center;</span></span><br><span class="line"><span class="undefined">font-size: 0;</span></span><br><span class="line"><span class="undefined">font-family: '微软雅黑';</span></span><br><span class="line"><span class="undefined">white-space: nowrap;</span></span><br><span class="line"><span class="undefined">&#125;</span></span><br><span class="line"><span class="undefined">.simpleNav::-webkit-scrollbar&#123;height:0px&#125;</span></span><br><span class="line"><span class="undefined">.simpleNavBar&#123;</span></span><br><span class="line"><span class="undefined">display: inline-block;</span></span><br><span class="line"><span class="undefined">width: 1.2rem;</span></span><br><span class="line"><span class="undefined">color:#fff;</span></span><br><span class="line"><span class="undefined">font-size:0.3rem;</span></span><br><span class="line"><span class="undefined">&#125;</span></span><br><span class="line"><span class="undefined">.navActive&#123;</span></span><br><span class="line"><span class="undefined">color: #000;</span></span><br><span class="line"><span class="undefined">border-bottom: 0.05rem solid #000;</span></span><br><span class="line"><span class="undefined">&#125;</span></span><br><span class="line"><span class="undefined">.placeholder&#123;</span></span><br><span class="line"><span class="undefined">width:100%;</span></span><br><span class="line"><span class="undefined">height: 1rem;</span></span><br><span class="line"><span class="undefined">&#125;</span></span><br><span class="line"><span class="undefined"></span><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p><strong>8. 在NewsCell.vue展示数据</strong></p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">template</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">section</span> <span class="attr">class</span>=<span class="string">"financial-list"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">section</span> <span class="attr">class</span>=<span class="string">"collect"</span> @<span class="attr">click</span>=<span class="string">"jumpPage"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">aside</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">h2</span>&gt;</span>&#123;&#123;newsDate.title&#125;&#125;<span class="tag">&lt;/<span class="name">h2</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">section</span> <span class="attr">class</span>=<span class="string">"Cleft clearfix"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">img</span> <span class="attr">class</span>=<span class="string">"fl"</span> <span class="attr">src</span>=<span class="string">"./../assets/icon/eyes.png"</span> <span class="attr">style</span>=<span class="string">"width:0.24rem;height:0.2rem;"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">span</span> <span class="attr">class</span>=<span class="string">"fl"</span>&gt;</span>&#123;&#123;newsDate.author_name&#125;&#125;<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">section</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">section</span> <span class="attr">class</span>=<span class="string">"Cright"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">"./../assets/icon/clock.png"</span> <span class="attr">style</span>=<span class="string">"width:0.2rem;height:0.2rem;"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">span</span>&gt;</span>&#123;&#123;newsDate.date | getYMD&#125;&#125;<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">section</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">style</span>=<span class="string">"clear: both"</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">aside</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">aside</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">img</span> <span class="attr">:src</span>=<span class="string">"newsDate.thumbnail_pic_s"</span> <span class="attr">style</span>=<span class="string">"border-radius: 0.2rem;"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">aside</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">style</span>=<span class="string">"clear: both"</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">section</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">section</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">template</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="undefined"></span></span><br><span class="line"><span class="javascript"><span class="keyword">export</span> <span class="keyword">default</span> &#123;</span></span><br><span class="line"><span class="javascript">name: <span class="string">'NewsCell'</span>,</span></span><br><span class="line"><span class="undefined">props: &#123;</span></span><br><span class="line"><span class="javascript">newsDate: <span class="built_in">Object</span></span></span><br><span class="line"><span class="undefined">&#125;,</span></span><br><span class="line"><span class="undefined">data () &#123;</span></span><br><span class="line"><span class="javascript"><span class="keyword">return</span> &#123;</span></span><br><span class="line"><span class="undefined">&#125;</span></span><br><span class="line"><span class="undefined">&#125;,</span></span><br><span class="line"><span class="undefined">computed: &#123;</span></span><br><span class="line"><span class="undefined">&#125;,</span></span><br><span class="line"><span class="undefined">methods: &#123;</span></span><br><span class="line"><span class="javascript">jumpPage: <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span></span><br><span class="line"><span class="javascript"><span class="built_in">window</span>.location.href = <span class="keyword">this</span>.newsDate.url</span></span><br><span class="line"><span class="undefined">&#125;</span></span><br><span class="line"><span class="undefined">&#125;</span></span><br><span class="line"><span class="undefined">&#125;</span></span><br><span class="line"><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">style</span> <span class="attr">scoped</span>&gt;</span><span class="undefined"></span></span><br><span class="line"><span class="undefined">.financial-list &#123;</span></span><br><span class="line"><span class="undefined">width: 100%;</span></span><br><span class="line"><span class="undefined">height: 100%;</span></span><br><span class="line"><span class="undefined">background-color: white;</span></span><br><span class="line"><span class="undefined">padding: 0.28rem 0;</span></span><br><span class="line"><span class="undefined">border-bottom: 1px solid #ccc;</span></span><br><span class="line"><span class="undefined">&#125;</span></span><br><span class="line"><span class="undefined"></span></span><br><span class="line"><span class="undefined">.financial-list .collect &#123;</span></span><br><span class="line"><span class="undefined">width: 92%;</span></span><br><span class="line"><span class="undefined">margin: 0 auto;</span></span><br><span class="line"><span class="undefined">&#125;</span></span><br><span class="line"><span class="undefined"></span></span><br><span class="line"><span class="undefined">.financial-list .collect aside:nth-of-type(1) &#123;</span></span><br><span class="line"><span class="undefined">width: 63%;</span></span><br><span class="line"><span class="undefined">float: left;</span></span><br><span class="line"><span class="undefined">&#125;</span></span><br><span class="line"><span class="undefined"></span></span><br><span class="line"><span class="undefined">.financial-list .collect aside:nth-of-type(2) &#123;</span></span><br><span class="line"><span class="undefined">width: 32%;</span></span><br><span class="line"><span class="undefined">height: 2rem;</span></span><br><span class="line"><span class="undefined">float: left;</span></span><br><span class="line"><span class="undefined">margin-left: 0.3rem;</span></span><br><span class="line"><span class="undefined">&#125;</span></span><br><span class="line"><span class="undefined"></span></span><br><span class="line"><span class="undefined">.financial-list .collect h2 &#123;</span></span><br><span class="line"><span class="undefined">width: 100%;</span></span><br><span class="line"><span class="undefined">height: 0.96rem;</span></span><br><span class="line"><span class="undefined">font-size: 0.32rem;</span></span><br><span class="line"><span class="undefined">color: #333333;</span></span><br><span class="line"><span class="undefined">line-height: 0.48rem;</span></span><br><span class="line"><span class="undefined">text-overflow: ellipsis;</span></span><br><span class="line"><span class="undefined">-o-text-overflow: ellipsis;</span></span><br><span class="line"><span class="undefined">overflow: hidden;</span></span><br><span class="line"><span class="undefined">&#125;</span></span><br><span class="line"><span class="undefined"></span></span><br><span class="line"><span class="undefined">.financial-list .collect aside:nth-of-type(2) img &#123;</span></span><br><span class="line"><span class="undefined">width: 100%;</span></span><br><span class="line"><span class="undefined">height: 100%;</span></span><br><span class="line"><span class="undefined">&#125;</span></span><br><span class="line"><span class="undefined"></span></span><br><span class="line"><span class="undefined">.financial-list .collect aside .Cleft &#123;</span></span><br><span class="line"><span class="undefined">width: 45%;</span></span><br><span class="line"><span class="undefined">float: left;</span></span><br><span class="line"><span class="undefined">margin-top: 0.66rem;</span></span><br><span class="line"><span class="undefined">&#125;</span></span><br><span class="line"><span class="undefined"></span></span><br><span class="line"><span class="undefined">.financial-list .collect aside .Cleft span&#123;</span></span><br><span class="line"><span class="undefined">display: block;</span></span><br><span class="line"><span class="undefined">width: 1.4rem;</span></span><br><span class="line"><span class="undefined">margin-left: 0.05rem;</span></span><br><span class="line"><span class="undefined">white-space: nowrap;</span></span><br><span class="line"><span class="undefined">text-overflow: ellipsis;</span></span><br><span class="line"><span class="undefined">-o-text-overflow: ellipsis;</span></span><br><span class="line"><span class="undefined">overflow: hidden;</span></span><br><span class="line"><span class="undefined">&#125;</span></span><br><span class="line"><span class="undefined"></span></span><br><span class="line"><span class="undefined">.financial-list .collect aside .Cright &#123;</span></span><br><span class="line"><span class="undefined">width: 55%;</span></span><br><span class="line"><span class="undefined">float: right;</span></span><br><span class="line"><span class="undefined">margin-top: 0.66rem;</span></span><br><span class="line"><span class="undefined">&#125;</span></span><br><span class="line"><span class="undefined">.financial-list .collect aside .Cright span&#123;</span></span><br><span class="line"><span class="undefined">display: inline-block;</span></span><br><span class="line"><span class="undefined">margin: 0.04rem 0 0 0.05rem;</span></span><br><span class="line"><span class="undefined">&#125;</span></span><br><span class="line"><span class="undefined">.financial-list .collect aside span &#123;</span></span><br><span class="line"><span class="undefined">font-size: 0.2rem;</span></span><br><span class="line"><span class="undefined">color: #999999;</span></span><br><span class="line"><span class="undefined">&#125;</span></span><br><span class="line"><span class="undefined"></span></span><br><span class="line"><span class="undefined">.financial-list .collect aside .Cleft img,</span></span><br><span class="line"><span class="undefined">.financial-list .collect aside .Cright img &#123;</span></span><br><span class="line"><span class="undefined">width: 0.18rem;</span></span><br><span class="line"><span class="undefined">height: 0.24rem;</span></span><br><span class="line"><span class="undefined">margin-top: 0.09rem;</span></span><br><span class="line"><span class="undefined">&#125;</span></span><br><span class="line"><span class="undefined"></span><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>最终结果：</p>
+<p><img src="/images/1013797-20170807222211955-469247956.png" alt="1013797-20170807222211955-469247956"></p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://taowy.github.io/2018/07/01/2/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1891,186 +2078,13 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://taowy.github.io/2018/03/12/hw1/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Wayen Tao">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/IMG_5592.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Ditto.">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/03/12/hw1/" itemprop="url">系统分析与设计作业_1</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-03-12T22:56:09+08:00">2018-03-12</time>
-            
-
-            
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/系分作业/" itemprop="url" rel="index"><span itemprop="name">系分作业</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h4 id="1、简单题"><a href="#1、简单题" class="headerlink" title="1、简单题"></a>1、简单题</h4><ul>
-<li><p><strong>软件工程的定义</strong></p>
-<p><strong>软件工程</strong>是研究和应用如何以系统性的、规范化的、可定量的过程化方法去开发和维护软件，以及如何把经过时间考验而证明正确的管理技术和当前能够得到的最好的技术方法结合起来的学科。它涉及到程序设计语言、数据库、软件开发工具、系统平台、标准、设计模式等方面。</p>
-</li>
-<li><p><strong>阅读经典名著“人月神话”等资料，解释 software crisis、COCOMO 模型</strong></p>
-<p><strong>software crisis</strong>即“软件危机”，是早期计算机科学的一个术语，指的是早期在软件开发及维护的过程中所遇到的一系列严重问题，这些问题皆可能导致软件产品的寿命缩短、甚至夭折。随着计算机应用需求的驱动，系统软件和应用软件有很大的发展，如操作系统，编译系统和大型应用软件等。软件生产的复杂性和高成本使大型软件的生产出现了很大的困难，即出现软件危机。</p>
-<p><strong>COCOMO</strong>英文全称为Constructive Cost Model，即构造性成本模型，是由巴里·勃姆（Barry Boehm）提出的一种软件成本估算方法。这种模型使用一种基本的回归分析公式，使用从项目历史和现状中的某些特征作为参数来进行计算。构造性成本模型由三个不断深入和详细的层次组成：基本COCOMO模型，中间COCOMO模型，详细COCOMO模型。</p>
-</li>
-<li><p><strong>软件生命周期</strong></p>
-<p> 分为四个时期和七个阶段。<br> 软件分析时期：问题定义、可行性研究、需求分析<br> 软件设计时期：总体设计、详细设计<br> 编码与测试时期：编码、测试<br> 运行与维护时期                                 </p>
-</li>
-<li><p><strong>按照 SWEBok 的 KA 划分，本课程关注哪些 KA 或 知识领域</strong></p>
-<p> SWEBOK指南将软件工程知识体系划分为10个知识域（Knowledge Area，KA),分为两类过程。<br> 一类是开发与维护过程，包括软件需求、软件设计、软件构造、软件测试和软件维护；<br> 一类是支持和组织过程，包括软件配置管理、软件工程管理、软件工程过程、软件工程工具与方法、软件质量。</p>
-<p><strong>本课程关注</strong>：软件需求、软件工程管理、软件工程模型和方法、软件质量。</p>
-</li>
-<li><p><strong>解释 CMMI 的五个级别。例如：Level 1 - Initial：无序，自发生产模式</strong></p>
-<p><strong>L1</strong>：CMMI一级，Initial: <strong>初始级</strong>。软件过程是无序的，有时甚至是混乱的，对过程几乎没有定义，成功取决于个人努力。管理是反应式的。<br><strong>L2</strong>：CMMI二级，Managed: <strong>可管理级</strong>。建立了基本的项目管理过程来跟踪费用、进度和功能特性。制定了必要的过程纪律，能重复早先类似应用项目取得的成功经验。<br><strong>L3</strong>：CMMI三级，Defined: <strong>定义级</strong>。已将软件管理和工程两方面的过程文档化、标准化，并综合成该组织的标准软件过程。所有项目均使用经批准、剪裁的标准软件过程来开发和维护软件，软件产品的生产在整个软件过程是可见的。<br><strong>L4</strong>：CMMI四级，Quantitatively Managed: <strong>量化管理级</strong>。分析对软件过程和产品质量的详细度量数据，对软件过程和产品都有定量的理解与控制。管理有一个作出结论的客观依据，管理能够在定量的范围内预测性能。<br><strong>L5</strong>：CMMI五级，Optimizing: <strong>优化管理级</strong>。过程的量化反馈和先进的新思想、新技术促使过程持续不断改进。</p>
-</li>
-<li><p><strong>用自己语言简述 SWEBok 或 CMMI （约200字）</strong></p>
-<p><strong>SWEBok</strong>全称是Software Engineering Body of Knowledge，软件工程知识体系，由IEEE计算机协会发布，目前已经发布了第三版。它是一个旨在规范软件工程知识体系的国际标准。软件工程知识体系提出了每一个软件工程师都应该具备或者了解的一些知识，对软件工程领域从业者具有重要意义。这些领域包括：软件需求、软件设计、 软件构造、 软件测试、 软件维护、 软件配置管理、 软件工程管理、 软件工程过程、 软件工程模型和方法、 软件质量、 软件工程职业实践等。</p>
-</li>
-</ul>
-<h4 id="2、解释-PSP-各项指标及技能要求："><a href="#2、解释-PSP-各项指标及技能要求：" class="headerlink" title="2、解释 PSP 各项指标及技能要求："></a>2、解释 PSP 各项指标及技能要求：</h4><ul>
-<li><p><strong>阅读《现代软件工程》的PSP:Personal Software Process章节</strong> <a href="http://www.cnblogs.com/xinz/archive/2011/11/27/2265425.html" target="_blank" rel="noopener">http://www.cnblogs.com/xinz/archive/2011/11/27/2265425.html</a></p>
-</li>
-<li><p><strong>按表格 PSP 2.1， 了解一个软件工程师在接到一个任务之后要做什么，需要哪些技能，解释你打算如何统计每项数据</strong></p>
-<p><strong>要做什么 </strong></p>
-<p>1.计划: 估计这个任务需要多少时间<br>2.开发: 分析需求、 生成设计文档、 设计复审 (和同事审核设计文档)、 代码规范 (为目前的开发制定合适的规范)、 具体设计、 具体编码、 代码复审、测试（包括自我测试，修改代码，提交修改）<br>3.记录时间花费<br>4.测试报告<br>5.计算工作量<br>6.事后总结<br>7.过程改进计划</p>
-<p><strong>需要哪些技能</strong></p>
-<p>能够评估工作时间的能力、分析需求能力、编写文档能力、代码编写审查能力、沟通能力、总结思想能力等等</p>
-<p><strong>统计方法</strong></p>
-<p>严格且合理使用时间管理软件记录时间，记录实际有效率的工作时间。</p>
-<p>及时更新工作计划</p>
-<p>利用代码合作管理工具进行工作量统计</p>
-</li>
-</ul>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
+  <nav class="pagination">
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
+  </nav>
+
 
 
           </div>
@@ -2115,7 +2129,7 @@
                 
                   <a href="/archives">
                 
-                    <span class="site-state-item-count">10</span>
+                    <span class="site-state-item-count">11</span>
                     <span class="site-state-item-name">posts</span>
                   </a>
                 </div>
@@ -2130,7 +2144,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">1</span>
+                      
+                    
+                    <span class="site-state-item-count">2</span>
                     <span class="site-state-item-name">categories</span>
                   </a>
                 </div>
