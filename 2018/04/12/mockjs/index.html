@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.0.5" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.0.5">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.0.5">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.0.5">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.0.5" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '6.0.5',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+<meta name="description" content="关于mockjs，官网描述的是  1.前后端分离 2.不需要修改既有代码，就可以拦截 Ajax 请求，返回模拟的响应数据。 3.数据类型丰富 4.通过随机数据，模拟各种场景。  总结起来就是在后端接口没有开发完成之前，前端可以用已有的接口文档，在真实的请求上拦截ajax，并根据mockjs的mock数据的规则，模拟真实接口返回的数据，并将随机的模拟数据返回参与相应的数据交互处理，这样真正实现了前后">
+<meta property="og:type" content="article">
+<meta property="og:title" content="mockjs应用在VUE设计中的尝试">
+<meta property="og:url" content="https://taowy.github.io/2018/04/12/mockjs/index.html">
+<meta property="og:site_name" content="Ditto.">
+<meta property="og:description" content="关于mockjs，官网描述的是  1.前后端分离 2.不需要修改既有代码，就可以拦截 Ajax 请求，返回模拟的响应数据。 3.数据类型丰富 4.通过随机数据，模拟各种场景。  总结起来就是在后端接口没有开发完成之前，前端可以用已有的接口文档，在真实的请求上拦截ajax，并根据mockjs的mock数据的规则，模拟真实接口返回的数据，并将随机的模拟数据返回参与相应的数据交互处理，这样真正实现了前后">
+<meta property="og:locale" content="zh-hans">
+<meta property="og:image" content="https://taowy.github.io/images/1013797-20170807221707424-507569416.png">
+<meta property="og:image" content="https://taowy.github.io/images/1013797-20170807222211955-469247956.png">
+<meta property="og:updated_time" content="2018-07-03T06:45:16.367Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="mockjs应用在VUE设计中的尝试">
+<meta name="twitter:description" content="关于mockjs，官网描述的是  1.前后端分离 2.不需要修改既有代码，就可以拦截 Ajax 请求，返回模拟的响应数据。 3.数据类型丰富 4.通过随机数据，模拟各种场景。  总结起来就是在后端接口没有开发完成之前，前端可以用已有的接口文档，在真实的请求上拦截ajax，并根据mockjs的mock数据的规则，模拟真实接口返回的数据，并将随机的模拟数据返回参与相应的数据交互处理，这样真正实现了前后">
+<meta name="twitter:image" content="https://taowy.github.io/images/1013797-20170807221707424-507569416.png">
+
+
+
+
+
+
+  <link rel="canonical" href="https://taowy.github.io/2018/04/12/mockjs/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+  <title>mockjs应用在VUE设计中的尝试 | Ditto.</title>
+  
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"> <div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Ditto.</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            <i class="menu-item-icon fa fa-fw fa-home"></i> <br />Home</a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />Tags</a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            <i class="menu-item-icon fa fa-fw fa-th"></i> <br />Categories</a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+  
+
+
+
+ </div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://taowy.github.io/2018/04/12/mockjs/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Wayen Tao">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/IMG_5592.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ditto.">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">mockjs应用在VUE设计中的尝试</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-04-12T14:39:15+08:00">2018-04-12</time>
+            
+
+            
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/系分博客/" itemprop="url" rel="index"><span itemprop="name">系分博客</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>关于mockjs，官网描述的是</p>
+<blockquote>
+<p>1.前后端分离</p>
+<p>2.不需要修改既有代码，就可以拦截 Ajax 请求，返回模拟的响应数据。</p>
+<p>3.数据类型丰富</p>
+<p>4.通过随机数据，模拟各种场景。</p>
+</blockquote>
+<p>总结起来就是在后端接口没有开发完成之前，前端可以用已有的接口文档，在真实的请求上拦截ajax，并根据mockjs的mock数据的规则，模拟真实接口返回的数据，并将随机的模拟数据返回参与相应的数据交互处理，这样真正实现了前后台的分离开发。</p>
+<p>与以往的自己模拟的假数据不同，mockjs可以带给我们的是：在后台接口未开发完成之前模拟数据，并返回，完成前台的交互；在后台数据完成之后，你所做的只是去掉mockjs：停止拦截真实的ajax，仅此而已。</p>
+<p>在项目中尝试了mockjs，mock数据，实现前后端分离开发。</p>
+<p><strong>1.安装vue-cli全局脚手架</strong></p>
+<blockquote>
+<p>npm install –global vue-cli</p>
+</blockquote>
+<p><strong>2.创建vue项目</strong></p>
+<blockquote>
+<p>vue init webpack mockjs<br> cd mockjs<br>npm install axios –save</p>
+</blockquote>
+<p><strong>3.安装mockjs</strong></p>
+<blockquote>
+<p>npm install mockjs –save-dev</p>
+</blockquote>
+<p><strong>在安装过程中我出现了以下问题</strong>：</p>
+<blockquote>
+<p>npm install stylus-loader 警告</p>
+</blockquote>
+<p>需要另外一个组件支持，</p>
+<p><strong>npm install –save stylus stylus-loader</strong></p>
+<p>这样搭建好VUE，项目目录如下：</p>
+<p><img src="/images/1013797-20170807221707424-507569416.png" alt="1013797-20170807221707424-507569416"></p>
+<p>axios/api    用来封装axios</p>
+<p>Hello.vue     页面首页</p>
+<p>NeswCell.vue   新闻组件</p>
+<p>router/index.js   路由</p>
+<p>main.js      入口js</p>
+<p>mock.js     mockjs文件</p>
+<p><strong>5.在入口js里引入mockjs</strong></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// The Vue build version to load with the `import` command</span></span><br><span class="line"><span class="comment">// (runtime-only or standalone) has been set in webpack.base.conf with an alias.</span></span><br><span class="line"><span class="keyword">import</span> Vue <span class="keyword">from</span> <span class="string">'vue'</span></span><br><span class="line"><span class="keyword">import</span> App <span class="keyword">from</span> <span class="string">'./App'</span></span><br><span class="line"><span class="keyword">import</span> router <span class="keyword">from</span> <span class="string">'./router'</span></span><br><span class="line"></span><br><span class="line">Vue.config.productionTip = <span class="literal">false</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 引入mockjs</span></span><br><span class="line"><span class="built_in">require</span>(<span class="string">'./mock.js'</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">/* eslint-disable no-new */</span></span><br><span class="line"><span class="keyword">new</span> Vue(&#123;</span><br><span class="line">el: <span class="string">'#app'</span>,</span><br><span class="line">router,</span><br><span class="line">template: <span class="string">'&lt;App/&gt;'</span>,</span><br><span class="line">components: &#123;</span><br><span class="line">App</span><br><span class="line">&#125;</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">Vue.filter(<span class="string">'getYMD'</span>, <span class="function"><span class="keyword">function</span>(<span class="params">input</span>) </span>&#123;</span><br><span class="line"><span class="keyword">return</span> input.split(<span class="string">' '</span>)[<span class="number">0</span>];</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p><strong>6. 添加一个mock规则</strong></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 引入mockjs</span></span><br><span class="line"><span class="keyword">const</span> Mock = <span class="built_in">require</span>(<span class="string">'mockjs'</span>);</span><br><span class="line"><span class="comment">// 获取 mock.Random 对象</span></span><br><span class="line"><span class="keyword">const</span> Random = Mock.Random;</span><br><span class="line"><span class="comment">// mock一组数据</span></span><br><span class="line"><span class="keyword">const</span> produceNewsData = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line"><span class="keyword">let</span> articles = [];</span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; <span class="number">100</span>; i++) &#123;</span><br><span class="line"><span class="keyword">let</span> newArticleObject = &#123;</span><br><span class="line">title: Random.csentence(<span class="number">5</span>, <span class="number">30</span>), <span class="comment">//  Random.csentence( min, max )</span></span><br><span class="line">thumbnail_pic_s: Random.dataImage(<span class="string">'300x250'</span>, <span class="string">'mock的图片'</span>), <span class="comment">// Random.dataImage( size, text ) 生成一段随机的 Base64 图片编码</span></span><br><span class="line">author_name: Random.cname(), <span class="comment">// Random.cname() 随机生成一个常见的中文姓名</span></span><br><span class="line">date: Random.date() + <span class="string">' '</span> + Random.time() <span class="comment">// Random.date()指示生成的日期字符串的格式,默认为yyyy-MM-dd；Random.time() 返回一个随机的时间字符串</span></span><br><span class="line">&#125;</span><br><span class="line">articles.push(newArticleObject)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">return</span> &#123;</span><br><span class="line">articles: articles</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Mock.mock( url, post/get , 返回的数据)；</span></span><br><span class="line">Mock.mock(<span class="string">'/news/index'</span>, <span class="string">'post'</span>, produceNewsData);</span><br></pre></td></tr></table></figure>
+<p><strong>7. 在Hello.vue 中请求文档接口，并接收mock数据</strong></p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">template</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"index"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">v-for</span>=<span class="string">"(item, key) in newsListShow"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">news-cell</span></span></span><br><span class="line"><span class="tag"><span class="attr">:newsDate</span>=<span class="string">"item"</span></span></span><br><span class="line"><span class="tag"><span class="attr">:key</span>=<span class="string">"key"</span></span></span><br><span class="line"><span class="tag">&gt;</span><span class="tag">&lt;/<span class="name">news-cell</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">template</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="undefined"></span></span><br><span class="line"><span class="javascript"><span class="keyword">import</span> api <span class="keyword">from</span> <span class="string">'./../axios/api.js'</span></span></span><br><span class="line"><span class="javascript"><span class="keyword">import</span> NewsCell <span class="keyword">from</span> <span class="string">'./NewsCell.vue'</span></span></span><br><span class="line"><span class="undefined"></span></span><br><span class="line"><span class="javascript"><span class="keyword">export</span> <span class="keyword">default</span> &#123;</span></span><br><span class="line"><span class="javascript">name: <span class="string">'index'</span>,</span></span><br><span class="line"><span class="undefined">data () &#123;</span></span><br><span class="line"><span class="javascript"><span class="keyword">return</span> &#123;</span></span><br><span class="line"><span class="undefined">newsListShow: [],</span></span><br><span class="line"><span class="undefined">&#125;</span></span><br><span class="line"><span class="undefined">&#125;,</span></span><br><span class="line"><span class="undefined">components: &#123;</span></span><br><span class="line"><span class="undefined">NewsCell</span></span><br><span class="line"><span class="undefined">&#125;,</span></span><br><span class="line"><span class="undefined">created() &#123;</span></span><br><span class="line"><span class="javascript"><span class="keyword">this</span>.setNewsApi();</span></span><br><span class="line"><span class="undefined">&#125;,</span></span><br><span class="line"><span class="undefined">methods:&#123;</span></span><br><span class="line"><span class="javascript">setNewsApi: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span></span><br><span class="line"><span class="javascript">api.JH_news(<span class="string">'/news/index'</span>, <span class="string">'type=top&amp;key=123456'</span>)</span></span><br><span class="line"><span class="javascript">.then(<span class="function"><span class="params">res</span> =&gt;</span> &#123;</span></span><br><span class="line"><span class="javascript"><span class="built_in">console</span>.log(res);</span></span><br><span class="line"><span class="javascript"><span class="keyword">this</span>.newsListShow = res.articles;</span></span><br><span class="line"><span class="undefined">&#125;);</span></span><br><span class="line"><span class="undefined">&#125;,</span></span><br><span class="line"><span class="undefined">&#125;</span></span><br><span class="line"><span class="undefined">&#125;</span></span><br><span class="line"><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- Add "scoped" attribute to limit CSS to this component only --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">style</span> <span class="attr">scoped</span>&gt;</span><span class="undefined"></span></span><br><span class="line"><span class="undefined">.topNav&#123;</span></span><br><span class="line"><span class="undefined">width: 100%;</span></span><br><span class="line"><span class="undefined">background: #ED4040;</span></span><br><span class="line"><span class="undefined">position: fixed;</span></span><br><span class="line"><span class="undefined">top:0rem;</span></span><br><span class="line"><span class="undefined">left: 0;</span></span><br><span class="line"><span class="undefined">z-index: 10;</span></span><br><span class="line"><span class="undefined">&#125;</span></span><br><span class="line"><span class="undefined">.simpleNav&#123;</span></span><br><span class="line"><span class="undefined">width: 100%;</span></span><br><span class="line"><span class="undefined">line-height: 1rem;</span></span><br><span class="line"><span class="undefined">overflow: hidden;</span></span><br><span class="line"><span class="undefined">overflow-x: auto;</span></span><br><span class="line"><span class="undefined">text-align: center;</span></span><br><span class="line"><span class="undefined">font-size: 0;</span></span><br><span class="line"><span class="undefined">font-family: '微软雅黑';</span></span><br><span class="line"><span class="undefined">white-space: nowrap;</span></span><br><span class="line"><span class="undefined">&#125;</span></span><br><span class="line"><span class="undefined">.simpleNav::-webkit-scrollbar&#123;height:0px&#125;</span></span><br><span class="line"><span class="undefined">.simpleNavBar&#123;</span></span><br><span class="line"><span class="undefined">display: inline-block;</span></span><br><span class="line"><span class="undefined">width: 1.2rem;</span></span><br><span class="line"><span class="undefined">color:#fff;</span></span><br><span class="line"><span class="undefined">font-size:0.3rem;</span></span><br><span class="line"><span class="undefined">&#125;</span></span><br><span class="line"><span class="undefined">.navActive&#123;</span></span><br><span class="line"><span class="undefined">color: #000;</span></span><br><span class="line"><span class="undefined">border-bottom: 0.05rem solid #000;</span></span><br><span class="line"><span class="undefined">&#125;</span></span><br><span class="line"><span class="undefined">.placeholder&#123;</span></span><br><span class="line"><span class="undefined">width:100%;</span></span><br><span class="line"><span class="undefined">height: 1rem;</span></span><br><span class="line"><span class="undefined">&#125;</span></span><br><span class="line"><span class="undefined"></span><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p><strong>8. 在NewsCell.vue展示数据</strong></p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">template</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">section</span> <span class="attr">class</span>=<span class="string">"financial-list"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">section</span> <span class="attr">class</span>=<span class="string">"collect"</span> @<span class="attr">click</span>=<span class="string">"jumpPage"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">aside</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">h2</span>&gt;</span>&#123;&#123;newsDate.title&#125;&#125;<span class="tag">&lt;/<span class="name">h2</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">section</span> <span class="attr">class</span>=<span class="string">"Cleft clearfix"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">img</span> <span class="attr">class</span>=<span class="string">"fl"</span> <span class="attr">src</span>=<span class="string">"./../assets/icon/eyes.png"</span> <span class="attr">style</span>=<span class="string">"width:0.24rem;height:0.2rem;"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">span</span> <span class="attr">class</span>=<span class="string">"fl"</span>&gt;</span>&#123;&#123;newsDate.author_name&#125;&#125;<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">section</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">section</span> <span class="attr">class</span>=<span class="string">"Cright"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">"./../assets/icon/clock.png"</span> <span class="attr">style</span>=<span class="string">"width:0.2rem;height:0.2rem;"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">span</span>&gt;</span>&#123;&#123;newsDate.date | getYMD&#125;&#125;<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">section</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">style</span>=<span class="string">"clear: both"</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">aside</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">aside</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">img</span> <span class="attr">:src</span>=<span class="string">"newsDate.thumbnail_pic_s"</span> <span class="attr">style</span>=<span class="string">"border-radius: 0.2rem;"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">aside</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">style</span>=<span class="string">"clear: both"</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">section</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">section</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">template</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="undefined"></span></span><br><span class="line"><span class="javascript"><span class="keyword">export</span> <span class="keyword">default</span> &#123;</span></span><br><span class="line"><span class="javascript">name: <span class="string">'NewsCell'</span>,</span></span><br><span class="line"><span class="undefined">props: &#123;</span></span><br><span class="line"><span class="javascript">newsDate: <span class="built_in">Object</span></span></span><br><span class="line"><span class="undefined">&#125;,</span></span><br><span class="line"><span class="undefined">data () &#123;</span></span><br><span class="line"><span class="javascript"><span class="keyword">return</span> &#123;</span></span><br><span class="line"><span class="undefined">&#125;</span></span><br><span class="line"><span class="undefined">&#125;,</span></span><br><span class="line"><span class="undefined">computed: &#123;</span></span><br><span class="line"><span class="undefined">&#125;,</span></span><br><span class="line"><span class="undefined">methods: &#123;</span></span><br><span class="line"><span class="javascript">jumpPage: <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span></span><br><span class="line"><span class="javascript"><span class="built_in">window</span>.location.href = <span class="keyword">this</span>.newsDate.url</span></span><br><span class="line"><span class="undefined">&#125;</span></span><br><span class="line"><span class="undefined">&#125;</span></span><br><span class="line"><span class="undefined">&#125;</span></span><br><span class="line"><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">style</span> <span class="attr">scoped</span>&gt;</span><span class="undefined"></span></span><br><span class="line"><span class="undefined">.financial-list &#123;</span></span><br><span class="line"><span class="undefined">width: 100%;</span></span><br><span class="line"><span class="undefined">height: 100%;</span></span><br><span class="line"><span class="undefined">background-color: white;</span></span><br><span class="line"><span class="undefined">padding: 0.28rem 0;</span></span><br><span class="line"><span class="undefined">border-bottom: 1px solid #ccc;</span></span><br><span class="line"><span class="undefined">&#125;</span></span><br><span class="line"><span class="undefined"></span></span><br><span class="line"><span class="undefined">.financial-list .collect &#123;</span></span><br><span class="line"><span class="undefined">width: 92%;</span></span><br><span class="line"><span class="undefined">margin: 0 auto;</span></span><br><span class="line"><span class="undefined">&#125;</span></span><br><span class="line"><span class="undefined"></span></span><br><span class="line"><span class="undefined">.financial-list .collect aside:nth-of-type(1) &#123;</span></span><br><span class="line"><span class="undefined">width: 63%;</span></span><br><span class="line"><span class="undefined">float: left;</span></span><br><span class="line"><span class="undefined">&#125;</span></span><br><span class="line"><span class="undefined"></span></span><br><span class="line"><span class="undefined">.financial-list .collect aside:nth-of-type(2) &#123;</span></span><br><span class="line"><span class="undefined">width: 32%;</span></span><br><span class="line"><span class="undefined">height: 2rem;</span></span><br><span class="line"><span class="undefined">float: left;</span></span><br><span class="line"><span class="undefined">margin-left: 0.3rem;</span></span><br><span class="line"><span class="undefined">&#125;</span></span><br><span class="line"><span class="undefined"></span></span><br><span class="line"><span class="undefined">.financial-list .collect h2 &#123;</span></span><br><span class="line"><span class="undefined">width: 100%;</span></span><br><span class="line"><span class="undefined">height: 0.96rem;</span></span><br><span class="line"><span class="undefined">font-size: 0.32rem;</span></span><br><span class="line"><span class="undefined">color: #333333;</span></span><br><span class="line"><span class="undefined">line-height: 0.48rem;</span></span><br><span class="line"><span class="undefined">text-overflow: ellipsis;</span></span><br><span class="line"><span class="undefined">-o-text-overflow: ellipsis;</span></span><br><span class="line"><span class="undefined">overflow: hidden;</span></span><br><span class="line"><span class="undefined">&#125;</span></span><br><span class="line"><span class="undefined"></span></span><br><span class="line"><span class="undefined">.financial-list .collect aside:nth-of-type(2) img &#123;</span></span><br><span class="line"><span class="undefined">width: 100%;</span></span><br><span class="line"><span class="undefined">height: 100%;</span></span><br><span class="line"><span class="undefined">&#125;</span></span><br><span class="line"><span class="undefined"></span></span><br><span class="line"><span class="undefined">.financial-list .collect aside .Cleft &#123;</span></span><br><span class="line"><span class="undefined">width: 45%;</span></span><br><span class="line"><span class="undefined">float: left;</span></span><br><span class="line"><span class="undefined">margin-top: 0.66rem;</span></span><br><span class="line"><span class="undefined">&#125;</span></span><br><span class="line"><span class="undefined"></span></span><br><span class="line"><span class="undefined">.financial-list .collect aside .Cleft span&#123;</span></span><br><span class="line"><span class="undefined">display: block;</span></span><br><span class="line"><span class="undefined">width: 1.4rem;</span></span><br><span class="line"><span class="undefined">margin-left: 0.05rem;</span></span><br><span class="line"><span class="undefined">white-space: nowrap;</span></span><br><span class="line"><span class="undefined">text-overflow: ellipsis;</span></span><br><span class="line"><span class="undefined">-o-text-overflow: ellipsis;</span></span><br><span class="line"><span class="undefined">overflow: hidden;</span></span><br><span class="line"><span class="undefined">&#125;</span></span><br><span class="line"><span class="undefined"></span></span><br><span class="line"><span class="undefined">.financial-list .collect aside .Cright &#123;</span></span><br><span class="line"><span class="undefined">width: 55%;</span></span><br><span class="line"><span class="undefined">float: right;</span></span><br><span class="line"><span class="undefined">margin-top: 0.66rem;</span></span><br><span class="line"><span class="undefined">&#125;</span></span><br><span class="line"><span class="undefined">.financial-list .collect aside .Cright span&#123;</span></span><br><span class="line"><span class="undefined">display: inline-block;</span></span><br><span class="line"><span class="undefined">margin: 0.04rem 0 0 0.05rem;</span></span><br><span class="line"><span class="undefined">&#125;</span></span><br><span class="line"><span class="undefined">.financial-list .collect aside span &#123;</span></span><br><span class="line"><span class="undefined">font-size: 0.2rem;</span></span><br><span class="line"><span class="undefined">color: #999999;</span></span><br><span class="line"><span class="undefined">&#125;</span></span><br><span class="line"><span class="undefined"></span></span><br><span class="line"><span class="undefined">.financial-list .collect aside .Cleft img,</span></span><br><span class="line"><span class="undefined">.financial-list .collect aside .Cright img &#123;</span></span><br><span class="line"><span class="undefined">width: 0.18rem;</span></span><br><span class="line"><span class="undefined">height: 0.24rem;</span></span><br><span class="line"><span class="undefined">margin-top: 0.09rem;</span></span><br><span class="line"><span class="undefined">&#125;</span></span><br><span class="line"><span class="undefined"></span><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>最终结果：</p>
+<p><img src="/images/1013797-20170807222211955-469247956.png" alt="1013797-20170807222211955-469247956"></p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/04/10/hw3/" rel="next" title="系统分析与设计作业_3-学习总结">
+                <i class="fa fa-chevron-left"></i> 系统分析与设计作业_3-学习总结
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/04/22/hw4/" rel="prev" title="系统分析与设计作业_4">
+                系统分析与设计作业_4 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/IMG_5592.png"
+                alt="Wayen Tao" />
+            
+              <p class="site-author-name" itemprop="name">Wayen Tao</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives">
+                
+                    <span class="site-state-item-count">11</span>
+                    <span class="site-state-item-name">posts</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index-1.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">2</span>
+                    <span class="site-state-item-name">categories</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                    <span class="site-state-item-count">1</span>
+                    <span class="site-state-item-name">tags</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Wayen Tao</span>
+
+  
+
+  
+</div>
+
+
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/theme-next/hexo-theme-next">NexT.Mist</a> v6.0.5</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.0.5"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.0.5"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.0.5"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.0.5"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.0.5"></script>
+
+
+
+  
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
